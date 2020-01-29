@@ -6,9 +6,9 @@ import (
 )
 
 func main() {
-	/*	c := config.GetConfig()
+	c := config.GetConfig()
 
-		a := &app.App{}
-		a.Initialize(c)
-		a.Run(c.App.Host)*/
+	a := &app.App{}
+	a.Initialize(c)
+	a.Run(c.App.Host)
 }

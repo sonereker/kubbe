@@ -1,19 +1,27 @@
 package app
 
 import (
-	"github.com/gorilla/handlers"
-	"github.com/gorilla/mux"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
+
+	"github.com/gorilla/handlers"
+	"github.com/gorilla/mux"
+	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/postgres"
+	"github.com/sonereker/kubbe/config"
+	"github.com/sonereker/kubbe/handler"
+	"github.com/sonereker/kubbe/model"
 )
 
 type App struct {
 	Router *mux.Router
+	DB     *gorm.DB
 }
 
 func (a *App) Initialize(config *config.Config) {
-	/*dbInfo := fmt.Sprintf("postgres://%s:%s@%s/%s?sslmode=%s",
+	dbInfo := fmt.Sprintf("postgres://%s:%s@%s/%s?sslmode=%s",
 		config.DB.Username,
 		config.DB.Password,
 		config.DB.Host,
@@ -28,28 +36,42 @@ func (a *App) Initialize(config *config.Config) {
 
 	a.DB = DBMigrate(db)
 	a.Router = mux.NewRouter()
-	a.setRouters()*/
+	a.setRouters()
 }
 
 func (a *App) setRouters() {
-	/*c := a.Router.PathPrefix("/catalogs").Subrouter()
-	c.HandleFunc("", handler.ValidateToken(a.GetAllCatalogs)).Methods("GET")
-	c.HandleFunc("", handler.ValidateToken(a.CreateCatalog)).Methods("POST")
-	c.HandleFunc("/{id}", handler.ValidateToken(a.GetCatalog)).Methods("GET")
-	c.HandleFunc("/{id}", handler.ValidateToken(a.UpdateCatalog)).Methods("PUT")
-	c.HandleFunc("/{id}", handler.ValidateToken(a.DeleteCatalog)).Methods("DELETE")
+	a.Router.HandleFunc("/", a.GetHomePage).Methods("GET")
+	a.Router.PathPrefix("/styles/").Handler(http.StripPrefix("/styles/",
+		http.FileServer(http.Dir("template/assets/"))))
 
-	c.HandleFunc("/{id}/assets", handler.ValidateToken(a.GetAllAssets)).Methods("GET")
-	c.HandleFunc("/{id}/assets/new", handler.ValidateToken(a.CreateAsset)).Methods("POST")
-	c.HandleFunc("/{id}/assets/{assetId}", handler.ValidateToken(a.GetAsset)).Methods("GET")
-	c.HandleFunc("/{id}/assets/{assetId}", handler.ValidateToken(a.UpdateAsset)).Methods("PUT")
-	c.HandleFunc("/{id}/assets/{assetId}", handler.ValidateToken(a.DeleteAsset)).Methods("DELETE")*/
+	c := a.Router.PathPrefix("/manage").Subrouter()
+	c.HandleFunc("/places/new", a.GetNewPlacePage).Methods("GET")
+	c.HandleFunc("/places", a.CreatePlace).Methods("POST")
 }
 
 func (a *App) Run(host string) {
-	headers := handlers.AllowedHeaders([]string{"X-Requested-With", "Accept", "Content-Type", "Content-Length", "Accept-Encoding", "X-CSRF-Token", "Authorization"})
 	origins := handlers.AllowedOrigins([]string{"*"})
 	methods := handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "OPTIONS", "DELETE"})
 
-	log.Fatal(http.ListenAndServe(host, handlers.LoggingHandler(os.Stdout, handlers.CORS(headers, origins, methods)(a.Router))))
+	fmt.Printf("Running Kubbe on %s \n", host)
+	log.Fatal(http.ListenAndServe(host, handlers.LoggingHandler(os.Stdout, handlers.CORS(origins,
+		methods)(a.Router))))
+}
+
+// DBMigrate creates and migrates the tables also creates relationships if necessary
+func DBMigrate(db *gorm.DB) *gorm.DB {
+	db.AutoMigrate(&model.Author{}, &model.Place{}, &model.Content{})
+	return db
+}
+
+func (a *App) GetHomePage(w http.ResponseWriter, r *http.Request) {
+	handler.GetHomePage(a.DB, w, r)
+}
+
+func (a *App) GetNewPlacePage(w http.ResponseWriter, r *http.Request) {
+	handler.GetNewPlacePage(a.DB, w, r)
+}
+
+func (a *App) CreatePlace(w http.ResponseWriter, r *http.Request) {
+	handler.CreatePlace(a.DB, w, r)
 }
