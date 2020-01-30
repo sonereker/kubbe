@@ -1,0 +1,16 @@
+{{define "page"}}New Place{{end}}
+
+{{define "content"}}
+    <h2>Create a New Place</h2>
+    <form method="POST" action="/manage/places">
+        <label>Title:</label><br/>
+        <input type="text" name="title"><br/>
+        <label>Description:</label><br/>
+        <textarea name="description"></textarea><br/>
+        <label>Latitude:</label><br/>
+        <input type="text" name="lat"><br/>
+        <label>Longitude:</label><br/>
+        <input type="text" oname="lon"><br/>
+        <input type="submit" value="Create">
+    </form>
+{{end}}

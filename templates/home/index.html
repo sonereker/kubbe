@@ -1,0 +1,11 @@
+{{define "page"}}Main{{end}}
+
+{{define "content"}}
+    <h2>Listing {{len .}} places</h2>
+
+    <ul>
+        {{range .}}
+            <li><a href="{{(index .Contents 0).Slug}}">{{(index .Contents 0).Title}}</a></li>
+        {{end}}
+    </ul>
+{{end}}

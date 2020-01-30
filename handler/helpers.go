@@ -6,11 +6,11 @@ import (
 	"net/http"
 )
 
-// RenderTemplate renders HTML template using provided data and template name
-func RenderTemplate(w http.ResponseWriter, fileName string, data interface{}) {
-	tmpl, err := template.ParseFiles("template/" + fileName + ".html")
+// RenderTemplate renders HTML template with the name using provided data
+func RenderTemplate(w http.ResponseWriter, name string, data interface{}) {
+	tmpl, err := template.ParseFiles("templates/"+name+".html", "templates/layouts/manager.html")
 	if err != nil {
 		log.Fatal(err)
 	}
-	_ = tmpl.Execute(w, data)
+	_ = tmpl.ExecuteTemplate(w, "manager", data)
 }
