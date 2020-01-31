@@ -44,7 +44,7 @@ func (a *App) Initialize(config *config.Config) {
 func (a *App) setRouters() {
 	a.Router.HandleFunc("/", a.GetHomePage).Methods("GET")
 	a.Router.PathPrefix("/styles/").Handler(http.StripPrefix("/styles/",
-		http.FileServer(http.Dir("templates/assets/"))))
+		http.FileServer(http.Dir("templates/assets/styles/"))))
 
 	c := a.Router.PathPrefix("/manage").Subrouter()
 	c.HandleFunc("/places/new", a.GetNewPlacePage).Methods("GET")
