@@ -2,17 +2,23 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Kubbe - {{template "page" .}}</title>
+    <title>{{.AppTitle}} - {{template "page" .}}</title>
     <link rel="stylesheet" media="screen" href="/styles/screen.css">
 </head>
 <body>
-
 <header id="base">
-    <h1>Kubbe</h1>
+    <h1><a href="/">{{.AppTitle}}</a></h1>
 </header>
 
 <section id="content">
     {{template "content" .}}
 </section>
+<footer>
+    <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/manage/places/new">Add a place</a></li>
+        <li><a href="/pages/about">About</a></li>
+    </ul>
+</footer>
 </body>
 </html>{{end}}

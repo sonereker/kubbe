@@ -1,8 +1,13 @@
+html, body {
+  height: 100%; }
+
 body {
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji;
   padding: 0;
   margin: 0;
-  color: #333; }
+  color: #333;
+  display: flex;
+  flex-direction: column; }
 
 a, a:visited {
   color: #333;
@@ -12,7 +17,6 @@ a:hover {
   text-decoration: underline; }
 
 header#base {
-  border-bottom: 1px solid #ccc;
   padding: 10px; }
   header#base h1 {
     margin-left: 20px;
@@ -20,16 +24,70 @@ header#base {
     text-transform: uppercase; }
 
 section#content {
-  padding: 30px; }
+  flex: 1 0 auto;
+  margin: 0 auto;
+  padding: 30px;
+  max-width: 700px; }
+  section#content div.search {
+    display: block;
+    margin-bottom: 70px;
+    margin-top: 40px; }
+    section#content div.search input[type="text"] {
+      width: 676px;
+      padding: 10px;
+      font-size: 24px;
+      color: #333; }
   section#content h2 {
-    font-size: 33px;
+    font-size: 24px;
     font-weight: normal; }
   section#content ul {
     padding: 0; }
     section#content ul li {
-      font-size: 19px;
+      font-size: 17px;
+      padding: 15px 0;
+      list-style: none; }
+  section#content div.form {
+    width: 700px; }
+    section#content div.form h2 {
+      font-size: 24px;
+      font-weight: normal; }
+    section#content div.form input[type="text"] {
       padding: 10px;
-      list-style: none;
-      border-bottom: 1px solid #ccc; }
+      font-size: 17px;
+      width: 674px;
+      margin-bottom: 20px; }
+    section#content div.form textarea {
+      padding: 10px;
+      font-size: 17px;
+      width: 674px;
+      height: 400px;
+      margin-bottom: 20px; }
+    section#content div.form label {
+      font-size: 11px;
+      font-weight: bold;
+      color: #555;
+      text-transform: uppercase; }
+
+footer {
+  border-top: 1px solid #ededed;
+  text-align: right;
+  padding: 10px;
+  flex-shrink: 0; }
+  footer ul {
+    font-size: 14px;
+    list-style: none; }
+    footer ul li {
+      display: inline; }
+      footer ul li:after {
+        padding: 0 10px 0 10px;
+        content: '|';
+        color: #ccc; }
+      footer ul li:last-child:after {
+        content: ''; }
+      footer ul li a, footer ul li a:visited {
+        color: #555;
+        text-decoration: underline; }
+      footer ul li a:hover {
+        text-decoration: none; }
 
 /*# sourceMappingURL=screen.css.map */

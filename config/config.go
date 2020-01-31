@@ -16,7 +16,9 @@ type DBConfig struct {
 }
 
 type AppConfig struct {
-	Host string
+	Title      string
+	Host       string
+	MapsAPIKey string
 }
 
 func GetConfig() *Config {
@@ -30,6 +32,9 @@ func GetConfig() *Config {
 			Name:     "kubbe_dev",
 			SSLMode:  "disable",
 		},
-		App: &AppConfig{Host: "localhost:4000"},
+		App: &AppConfig{
+			Title: "Kubbe",
+			Host:  "localhost:4000",
+		},
 	}
 }

@@ -6,7 +6,12 @@
     <link rel="stylesheet" media="screen" href="/styles/screen.css">
 </head>
 <body>
-<h1>Kubbe</h1>
-{{template "content" .}}
+<header id="base">
+    <h1><a href="/">Kubbe</a></h1>
+</header>
+
+<section id="content">
+    {{template "content" .}}
+</section>
 </body>
 </html>{{end}}

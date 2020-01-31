@@ -1,16 +1,40 @@
 {{define "page"}}New Place{{end}}
 
 {{define "content"}}
-    <h2>Create a New Place</h2>
-    <form method="POST" action="/manage/places">
-        <label>Title:</label><br/>
-        <input type="text" name="title"><br/>
-        <label>Description:</label><br/>
-        <textarea name="description"></textarea><br/>
-        <label>Latitude:</label><br/>
-        <input type="text" name="lat"><br/>
-        <label>Longitude:</label><br/>
-        <input type="text" oname="lon"><br/>
-        <input type="submit" value="Create">
-    </form>
+    <div class="form">
+        <h2>Create a New Place</h2>
+        <form method="POST" action="/manage/places">
+            <label for="title">Title</label><br/>
+            <input type="text" name="title" id="title"><br/>
+            <label for="description">Description</label><br/>
+            <textarea name="description" id="description"></textarea><br/>
+            <label for="lat">Latitude</label><br/>
+            <input type="text" name="lat" id="lat"><br/>
+            <label for="lon">Longitude</label><br/>
+            <input type="text" name="lon" id="lon"><br/>
+            <input type="submit" value="Publish">
+            <input type="submit" value="Save Draft">
+        </form>
+    </div>
+
+    <script type="application/javascript">
+      const lat = document.getElementById("lat");
+      const lon = document.getElementById("lon");
+
+      function getLocation() {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(showPosition);
+        } else {
+          lat.value = "Geolocation is not supported by this browser.";
+          lon.value = "Geolocation is not supported by this browser.";
+        }
+      }
+
+      function showPosition(position) {
+        lat.value = position.coords.latitude;
+        lon.value = position.coords.longitude;
+      }
+
+      getLocation()
+    </script>
 {{end}}

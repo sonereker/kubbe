@@ -16,6 +16,7 @@ import (
 )
 
 type App struct {
+	Config *config.Config
 	Router *mux.Router
 	DB     *gorm.DB
 }
@@ -36,6 +37,7 @@ func (a *App) Initialize(config *config.Config) {
 
 	a.DB = DBMigrate(db)
 	a.Router = mux.NewRouter()
+	a.Config = config
 	a.setRouters()
 }
 
@@ -65,7 +67,7 @@ func DBMigrate(db *gorm.DB) *gorm.DB {
 }
 
 func (a *App) GetHomePage(w http.ResponseWriter, r *http.Request) {
-	handler.GetHomePage(a.DB, w, r)
+	handler.GetHomePage(a.DB, a.Config, w, r)
 }
 
 func (a *App) GetNewPlacePage(w http.ResponseWriter, r *http.Request) {
