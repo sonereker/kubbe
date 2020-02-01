@@ -43,6 +43,8 @@ func (a *App) Initialize(config *config.Config) {
 
 func (a *App) setRouters() {
 	a.Router.HandleFunc("/", a.GetHomePage).Methods("GET")
+	a.Router.HandleFunc("/{id}", a.GetShowPlacePage).Methods("GET")
+	a.Router.HandleFunc("/{id: [a-z]+}", a.GetShowPlacePage).Methods("GET")
 	a.Router.PathPrefix("/styles/").Handler(http.StripPrefix("/styles/",
 		http.FileServer(http.Dir("templates/assets/styles/"))))
 
@@ -68,6 +70,10 @@ func DBMigrate(db *gorm.DB) *gorm.DB {
 
 func (a *App) GetHomePage(w http.ResponseWriter, r *http.Request) {
 	handler.GetHomePage(a.DB, a.Config, w, r)
+}
+
+func (a *App) GetShowPlacePage(w http.ResponseWriter, r *http.Request) {
+	handler.GetShowPlacePage(a.DB, a.Config, w, r)
 }
 
 func (a *App) GetNewPlacePage(w http.ResponseWriter, r *http.Request) {

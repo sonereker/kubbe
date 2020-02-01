@@ -11,4 +11,5 @@ type Content struct {
 	Description string
 	PlaceID     uint
 	AuthorID    uint
+	Status      int
 }

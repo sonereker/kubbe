@@ -1,14 +1,40 @@
 package handler
 
 import (
+	"github.com/gorilla/mux"
 	"github.com/gosimple/slug"
 	"github.com/jinzhu/gorm"
+	"github.com/sonereker/kubbe/config"
 	"github.com/sonereker/kubbe/model"
 	"net/http"
+	"strconv"
 )
 
+// GetShowPlacePage renders place page with base layout
+func GetShowPlacePage(db *gorm.DB, c *config.Config, w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id := vars["id"]
+
+	var query *gorm.DB
+	place := model.Place{}
+
+	if isInteger(id) {
+		query = db.Preload("Contents").First(&place, id)
+	} else {
+		query = db.Preload("Contents").Table("places").Joins("left join contents on contents."+
+			"place_id = places.id").Where("contents.slug = ?", id).First(&place)
+	}
+
+	if err := query.Error; err != nil {
+		RenderError(w, "base", http.StatusNotFound)
+		return
+	}
+
+	RenderTemplate(w, "base", "places/show", PageData{c.App.Title, place})
+}
+
 func GetNewPlacePage(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
-	RenderTemplate(w, "places/new", nil)
+	RenderTemplate(w, "manager", "places/new", nil)
 }
 
 func CreatePlace(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
@@ -27,4 +53,9 @@ func CreatePlace(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 	db.Create(&place)
 
 	http.Redirect(w, r, "/", http.StatusMovedPermanently)
+}
+
+func isInteger(s string) bool {
+	_, err := strconv.Atoi(s)
+	return err == nil
 }

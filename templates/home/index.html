@@ -1,17 +1,11 @@
 {{define "page"}}Main{{end}}
 
 {{define "content"}}
-    <div class="search">
-        <form method="POST" action="/places/search">
-            <input type="text" name="keyword"/>
-        </form>
-    </div>
-
-    {{if gt (len .Contents) 0 }}
-        <h2>Listing {{len .Contents}} place{{if gt (len .Contents) 1 }}s{{end}}</h2>
+    {{if gt (len .Data) 0 }}
+        <h2>Currently indexing {{len .Data}} place{{if gt (len .Data) 1 }}s{{end}}</h2>
     {{ end }}
     <ul>
-        {{range .Contents}}
+        {{range .Data}}
             <li><a href="{{(index .Contents 0).Slug}}">{{(index .Contents 0).Title}}</a></li>
         {{end}}
     </ul>

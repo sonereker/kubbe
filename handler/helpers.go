@@ -1,32 +1,32 @@
 package handler
 
 import (
-	"github.com/sonereker/kubbe/config"
 	"html/template"
 	"log"
 	"net/http"
 )
 
-type AppI interface {
-	Initialize(config *config.Config)
-	setRouters()
-	Run(host string)
-	GetHomePage(w http.ResponseWriter, r *http.Request)
-	GetNewPlacePage(w http.ResponseWriter, r *http.Request)
-	CreatePlace(w http.ResponseWriter, r *http.Request)
-}
-
 type PageData struct {
 	AppTitle string
-	Contents interface{}
+	Data     interface{}
 }
 
-// RenderTemplate renders HTML template with the name using provided data
-func RenderTemplate(w http.ResponseWriter, name string, data interface{}) {
-	tmpl, err := template.ParseFiles("templates/"+name+".html", "templates/layouts/manager.html")
+// RenderTemplate renders HTML template with the name using provided layout and data
+func RenderTemplate(w http.ResponseWriter, layout string, name string, data interface{}) {
+	tmpl, err := template.ParseFiles("templates/"+name+".html", "templates/layouts/"+layout+".html")
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	_ = tmpl.ExecuteTemplate(w, "manager", data)
+	_ = tmpl.ExecuteTemplate(w, layout, data)
+}
+
+// RenderError renders an error page using provided layout and errorCode
+func RenderError(w http.ResponseWriter, layout string, errorCode int) {
+	tmpl, err := template.ParseFiles("templates/error.html", "templates/layouts/"+layout+".html")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	_ = tmpl.ExecuteTemplate(w, layout, errorCode)
 }

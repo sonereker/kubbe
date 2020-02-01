@@ -1,0 +1,17 @@
+{{define "page"}}{{(index .Data.Contents 0).Title}}{{end}}
+
+{{define "content"}}
+    <h1>{{(index .Data.Contents 0).Title}}</h1>
+
+    <section class="description">
+        {{(index .Data.Contents 0).Description}}
+    </section>
+
+    <div class="links">
+        <ul>
+            <li><a href="#">Suggest a Correction</a></li>
+            <li><a href="https://maps.google.com/maps?daddr={{.Data.Lat}},{{.Data.Lon}}">Show Location in Maps &rarr;
+                </a></li>
+        </ul>
+    </div>
+{{end}}
