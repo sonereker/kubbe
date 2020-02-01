@@ -69,7 +69,7 @@ section#content {
     padding: 0; }
     section#content ul li {
       font-size: 21px;
-      padding: 15px 0;
+      padding: 5px 0;
       list-style: none; }
       section#content ul li a, section#content ul li a:visited {
         text-decoration: underline; }
