@@ -17,7 +17,8 @@ func init() {
 
 func GetHomePage(db *gorm.DB, c *config.Config, w http.ResponseWriter, r *http.Request) {
 	var places []model.Place
-	db.Preload("Contents").Find(&places)
+	db.Preload("Contents").Table("places").Joins("left join contents on contents."+
+		"place_id = places.id").Where("contents.status = ?", model.Published).Find(&places)
 
 	tmpl.ExecuteTemplate(w, "base", PageData{c.App.Title, places})
 }

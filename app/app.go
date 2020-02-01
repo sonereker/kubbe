@@ -45,6 +45,9 @@ func (a *App) setRouters() {
 	a.Router.HandleFunc("/", a.GetHomePage).Methods("GET")
 	a.Router.HandleFunc("/{id}", a.GetShowPlacePage).Methods("GET")
 	a.Router.HandleFunc("/{id: [a-z]+}", a.GetShowPlacePage).Methods("GET")
+
+	a.Router.HandleFunc("/places/{id}/edit", a.GetEditPlacePage).Methods("GET")
+
 	a.Router.PathPrefix("/styles/").Handler(http.StripPrefix("/styles/",
 		http.FileServer(http.Dir("templates/assets/styles/"))))
 
@@ -82,4 +85,9 @@ func (a *App) GetNewPlacePage(w http.ResponseWriter, r *http.Request) {
 
 func (a *App) CreatePlace(w http.ResponseWriter, r *http.Request) {
 	handler.CreatePlace(a.DB, w, r)
+}
+
+// GetEditPlacePage returns edit place page as response
+func (a *App) GetEditPlacePage(w http.ResponseWriter, r *http.Request) {
+	handler.GetEditPlacePage(a.DB, a.Config, w, r)
 }

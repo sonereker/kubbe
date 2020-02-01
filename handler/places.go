@@ -22,7 +22,7 @@ func GetShowPlacePage(db *gorm.DB, c *config.Config, w http.ResponseWriter, r *h
 		query = db.Preload("Contents").First(&place, id)
 	} else {
 		query = db.Preload("Contents").Table("places").Joins("left join contents on contents."+
-			"place_id = places.id").Where("contents.slug = ?", id).First(&place)
+			"place_id = places.id").Where("contents.slug = ? and contents.status = ?", id, model.Published).First(&place)
 	}
 
 	if err := query.Error; err != nil {
@@ -44,6 +44,7 @@ func CreatePlace(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 	content.Title = r.Form.Get("title")
 	content.Slug = slug.Make(content.Title)
 	content.Description = r.Form.Get("description")
+	content.Status = model.Draft
 
 	place := model.Place{}
 	place.Contents = append(place.Contents, content)
@@ -53,6 +54,25 @@ func CreatePlace(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 	db.Create(&place)
 
 	http.Redirect(w, r, "/", http.StatusMovedPermanently)
+}
+
+// GetEditPlacePage renders edit place page
+func GetEditPlacePage(db *gorm.DB, c *config.Config, w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id := vars["id"]
+
+	var query *gorm.DB
+	place := model.Place{}
+
+	query = db.Preload("Contents").Table("places").Joins("left join contents on contents."+
+		"place_id = places.id").Where("contents.id = ? and contents.status = ?", id, model.Published).First(&place)
+
+	if err := query.Error; err != nil {
+		RenderError(w, "base", http.StatusNotFound)
+		return
+	}
+
+	RenderTemplate(w, "base", "places/edit", PageData{c.App.Title, place})
 }
 
 func isInteger(s string) bool {

@@ -1,0 +1,19 @@
+{{define "page"}}Edit Place{{end}}
+
+{{define "content"}}
+	<div class="form">
+		<h2>Edit Place</h2>
+		<form method="POST" action="/places">
+			<label for="title">Title</label><br/>
+			<input type="text" name="title" id="title"><br/>
+			<label for="description">Description</label><br/>
+			<textarea name="description" id="description"></textarea><br/>
+			<label for="lat">Latitude</label><br/>
+			<input type="text" name="lat" id="lat"><br/>
+			<label for="lon">Longitude</label><br/>
+			<input type="text" name="lon" id="lon"><br/>
+            <input type="submit" value="Save as Draft">
+			<input type="submit" value="Send for Review">
+		</form>
+	</div>
+{{end}}

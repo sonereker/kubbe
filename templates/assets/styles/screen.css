@@ -28,29 +28,41 @@ section#content {
   margin: 0 auto;
   padding: 30px;
   width: 700px; }
-  section#content h1 {
-    font-family: 'IBM Plex Serif', serif;
-    font-size: 29px; }
-  section#content section.description {
-    line-height: 1.7em;
-    font-size: 21px;
-    font-family: 'IBM Plex Serif', serif; }
-  section#content div.links {
-    margin-top: 30px;
-    border-top: 1px solid #ccc;
-    text-align: right;
-    font-size: 21px; }
-    section#content div.links ul li {
-      display: inline; }
-    section#content div.links a, section#content div.links a:visited {
-      font-size: 17px;
-      padding: 10px 15px;
-      background: #333;
-      color: #fff;
-      text-decoration: none; }
-    section#content div.links a:hover {
-      background: #000;
-      color: #fff; }
+  section#content div.place {
+    border-left: 1px solid #ccc;
+    padding-left: 60px; }
+    section#content div.place div.id {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      line-height: 40px;
+      text-align: center;
+      margin-left: -80px;
+      background: #ccc;
+      border-radius: 50%;
+      font-weight: bold; }
+    section#content div.place h1 {
+      font-family: 'IBM Plex Serif', serif;
+      font-size: 29px; }
+    section#content div.place section.description {
+      line-height: 1.7em;
+      font-size: 21px;
+      font-family: 'IBM Plex Serif', serif; }
+    section#content div.place div.links {
+      margin-top: 50px;
+      text-align: right;
+      font-size: 21px; }
+      section#content div.place div.links ul li {
+        display: inline; }
+      section#content div.place div.links a, section#content div.place div.links a:visited {
+        font-size: 17px;
+        padding: 10px 15px;
+        background: #333;
+        color: #fff;
+        text-decoration: none; }
+      section#content div.place div.links a:hover {
+        background: #000;
+        color: #fff; }
   section#content div.search {
     display: block;
     margin-bottom: 70px;
