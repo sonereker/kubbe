@@ -1,6 +1,7 @@
 package config
 
 import (
+	"github.com/stretchr/testify/assert"
 	"os"
 	"testing"
 )
@@ -24,17 +25,12 @@ func TestGetConfig(t *testing.T) {
 
 	c := GetConfig()
 
-	assertEquals(t, c.DB.Host, dbHost)
-	assertEquals(t, c.DB.Port, dbPort)
-	assertEquals(t, c.DB.Username, dbUsername)
-	assertEquals(t, c.DB.Password, dbPassword)
-	assertEquals(t, c.DB.Name, dbName)
-	assertEquals(t, c.App.Title, appTitle)
-	assertEquals(t, c.App.Host, appHost)
-}
-
-func assertEquals(t *testing.T, value string, envVarValue string) {
-	if value != envVarValue {
-		t.Errorf("Expected %s, but got '%s'", envVarValue, value)
-	}
+	assert.EqualValues(t, c.DB.Host, dbHost)
+	assert.EqualValues(t, c.DB.Host, dbHost)
+	assert.EqualValues(t, c.DB.Port, dbPort)
+	assert.EqualValues(t, c.DB.Username, dbUsername)
+	assert.EqualValues(t, c.DB.Password, dbPassword)
+	assert.EqualValues(t, c.DB.Name, dbName)
+	assert.EqualValues(t, c.App.Title, appTitle)
+	assert.EqualValues(t, c.App.Host, appHost)
 }
