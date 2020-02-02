@@ -6,12 +6,12 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-type Author struct {
+type User struct {
 	gorm.Model
 	Email     string `gorm:"unique"`
 	Password  string
 	Enabled   bool
 	Token     string
 	ExpiredAt *time.Time
-	Contents  []Content
+	Contents  []Content `gorm:"foreignkey:UserID"`
 }

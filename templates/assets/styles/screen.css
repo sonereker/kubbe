@@ -108,6 +108,18 @@ section#content {
       font-weight: bold;
       color: #555;
       text-transform: uppercase; }
+  section#content div.sessions {
+    margin: 0 auto; }
+    section#content div.sessions input[type="text"] {
+      padding: 10px;
+      font-size: 17px;
+      width: 674px;
+      margin-bottom: 20px; }
+    section#content div.sessions label {
+      font-size: 11px;
+      font-weight: bold;
+      color: #555;
+      text-transform: uppercase; }
 
 footer {
   border-top: 1px solid #ededed;

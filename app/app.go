@@ -43,14 +43,21 @@ func (a *App) Initialize(config *config.Config) {
 
 func (a *App) setRouters() {
 	a.Router.HandleFunc("/", a.GetHomePage).Methods("GET")
+
+	// Login
+	a.Router.HandleFunc("/login", a.GetLoginPage).Methods("GET")
+
+	// Places
 	a.Router.HandleFunc("/{id}", a.GetShowPlacePage).Methods("GET")
 	a.Router.HandleFunc("/{id: [a-z]+}", a.GetShowPlacePage).Methods("GET")
 
 	a.Router.HandleFunc("/places/{id}/edit", a.GetEditPlacePage).Methods("GET")
 
+	// Statics
 	a.Router.PathPrefix("/styles/").Handler(http.StripPrefix("/styles/",
 		http.FileServer(http.Dir("templates/assets/styles/"))))
 
+	// Management
 	c := a.Router.PathPrefix("/manage").Subrouter()
 	c.HandleFunc("/places/new", a.GetNewPlacePage).Methods("GET")
 	c.HandleFunc("/places", a.CreatePlace).Methods("POST")
@@ -67,12 +74,16 @@ func (a *App) Run(host string) {
 
 // DBMigrate creates and migrates the tables also creates relationships if necessary
 func DBMigrate(db *gorm.DB) *gorm.DB {
-	db.AutoMigrate(&model.Author{}, &model.Place{}, &model.Content{})
+	db.AutoMigrate(&model.User{}, &model.Place{}, &model.Content{})
 	return db
 }
 
 func (a *App) GetHomePage(w http.ResponseWriter, r *http.Request) {
 	handler.GetHomePage(a.DB, a.Config, w, r)
+}
+
+func (a *App) GetLoginPage(w http.ResponseWriter, r *http.Request) {
+	handler.GetLoginPage(a.DB, a.Config, w, r)
 }
 
 func (a *App) GetShowPlacePage(w http.ResponseWriter, r *http.Request) {

@@ -1,0 +1,17 @@
+{{define "sessions"}}<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Kubbe - {{template "page" .}}</title>
+	<link rel="stylesheet" media="screen" href="/styles/screen.css">
+</head>
+<body>
+<header id="base">
+	<h1><a href="/">Kubbe</a></h1>
+</header>
+
+<section id="content">
+    {{template "content" .}}
+</section>
+</body>
+</html>{{end}}

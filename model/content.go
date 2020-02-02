@@ -17,8 +17,8 @@ type Content struct {
 	Title       string `gorm:"size:512; index:contents_title"`
 	Slug        string `gorm:"type:varchar(512); unique_index"`
 	Description string
-	PlaceID     uint `gorm:"index:contents_place_id"`
-	AuthorID    uint
+	PlaceID     uint          `gorm:"index:contents_place_id"`
+	UserID      uint          `gorm:"index:contents_author_id"`
 	Status      ContentStatus `sql:"DEFAULT: 0"`
 }
 
