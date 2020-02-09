@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"github.com/jinzhu/gorm"
 	"github.com/sonereker/kubbe/config"
 	"html/template"
@@ -29,21 +30,22 @@ type (
 )
 
 // RenderTemplate renders HTML template with the name using provided layout and data
-func RenderTemplate(w http.ResponseWriter, l Layout, name string, data interface{}) {
-	tmpl, err := template.ParseFiles("templates/"+name+".html", "templates/layouts/"+string(l)+".html")
+func RenderTemplate(w http.ResponseWriter, layout Layout, name string, data interface{}) {
+	tmpl, err := template.ParseFiles(fmt.Sprintf("templates/%s.html", name),
+		fmt.Sprintf("templates/layouts/%s.html", layout))
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	_ = tmpl.ExecuteTemplate(w, string(l), data)
+	_ = tmpl.ExecuteTemplate(w, string(layout), data)
 }
 
 // RenderError renders an error page using provided layout and errorCode
-func RenderError(w http.ResponseWriter, l Layout, errorCode int) {
-	tmpl, err := template.ParseFiles("templates/error.html", "templates/layouts/"+string(l)+".html")
+func RenderError(w http.ResponseWriter, layout Layout, errorCode int) {
+	tmpl, err := template.ParseFiles("templates/error.html", fmt.Sprintf("templates/layouts/%s.html", layout))
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	_ = tmpl.ExecuteTemplate(w, string(l), errorCode)
+	_ = tmpl.ExecuteTemplate(w, string(layout), errorCode)
 }
