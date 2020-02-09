@@ -9,6 +9,6 @@ func main() {
 	c := config.GetConfig()
 
 	a := &app.App{}
-	a.Initialize(c)
-	a.Run(c.App.Host)
+	a.Init(c)
+	a.Run(c.App.Port)
 }

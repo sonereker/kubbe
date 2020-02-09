@@ -16,12 +16,14 @@ import (
 )
 
 type App struct {
-	Config *config.Config
-	Router *mux.Router
-	DB     *gorm.DB
+	Config      *config.Config
+	Router      *mux.Router
+	DB          *gorm.DB
+	PageHandler *handler.Page
 }
 
-func (a *App) Initialize(config *config.Config) {
+// Init; initializes a new App instance
+func (a *App) Init(config *config.Config) {
 	dbInfo := fmt.Sprintf("postgres://%s:%s@%s/%s?sslmode=%s",
 		config.DB.Username,
 		config.DB.Password,
@@ -38,20 +40,25 @@ func (a *App) Initialize(config *config.Config) {
 	a.DB = DBMigrate(db)
 	a.Router = mux.NewRouter()
 	a.Config = config
+	a.PageHandler = &handler.Page{
+		DB:     a.DB,
+		Config: a.Config,
+	}
+
 	a.setRouters()
 }
 
 func (a *App) setRouters() {
-	a.Router.HandleFunc("/", a.GetHomePage).Methods("GET")
+	a.Router.HandleFunc("/", a.PageHandler.Home).Methods("GET")
 
 	// Login
-	a.Router.HandleFunc("/login", a.GetLoginPage).Methods("GET")
+	a.Router.HandleFunc("/login", a.PageHandler.Login).Methods("GET")
 
 	// Places
-	a.Router.HandleFunc("/{id}", a.GetShowPlacePage).Methods("GET")
-	a.Router.HandleFunc("/{id: [a-z]+}", a.GetShowPlacePage).Methods("GET")
+	a.Router.HandleFunc("/{id}", a.PageHandler.ShowPlace).Methods("GET")
+	a.Router.HandleFunc("/{id: [a-z]+}", a.PageHandler.ShowPlace).Methods("GET")
 
-	a.Router.HandleFunc("/places/{id}/edit", a.GetEditPlacePage).Methods("GET")
+	a.Router.HandleFunc("/places/{id}/edit", a.PageHandler.EditPlace).Methods("GET")
 
 	// Statics
 	a.Router.PathPrefix("/styles/").Handler(http.StripPrefix("/styles/",
@@ -59,46 +66,22 @@ func (a *App) setRouters() {
 
 	// Management
 	c := a.Router.PathPrefix("/manage").Subrouter()
-	c.HandleFunc("/places/new", a.GetNewPlacePage).Methods("GET")
-	c.HandleFunc("/places", a.CreatePlace).Methods("POST")
+	c.HandleFunc("/places/new", a.PageHandler.NewPlace).Methods("GET")
+	c.HandleFunc("/places", a.PageHandler.CreatePlace).Methods("POST")
 }
 
-func (a *App) Run(host string) {
+// Run; sets allowed origins and methods then starts http server
+func (a *App) Run(port string) {
 	origins := handlers.AllowedOrigins([]string{"*"})
 	methods := handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "OPTIONS", "DELETE"})
 
-	fmt.Printf("Running Kubbe on %s \n", host)
-	log.Fatal(http.ListenAndServe(host, handlers.LoggingHandler(os.Stdout, handlers.CORS(origins,
+	fmt.Printf("Running Kubbe on %s \n", port)
+	log.Fatal(http.ListenAndServe(":"+port, handlers.LoggingHandler(os.Stdout, handlers.CORS(origins,
 		methods)(a.Router))))
 }
 
-// DBMigrate creates and migrates the tables also creates relationships if necessary
+// DBMigrate creates tables, runs migrations also creates relationships if necessary
 func DBMigrate(db *gorm.DB) *gorm.DB {
 	db.AutoMigrate(&model.User{}, &model.Place{}, &model.Content{})
 	return db
-}
-
-func (a *App) GetHomePage(w http.ResponseWriter, r *http.Request) {
-	handler.GetHomePage(a.DB, a.Config, w, r)
-}
-
-func (a *App) GetLoginPage(w http.ResponseWriter, r *http.Request) {
-	handler.GetLoginPage(a.DB, a.Config, w, r)
-}
-
-func (a *App) GetShowPlacePage(w http.ResponseWriter, r *http.Request) {
-	handler.GetShowPlacePage(a.DB, a.Config, w, r)
-}
-
-func (a *App) GetNewPlacePage(w http.ResponseWriter, r *http.Request) {
-	handler.GetNewPlacePage(a.DB, w, r)
-}
-
-func (a *App) CreatePlace(w http.ResponseWriter, r *http.Request) {
-	handler.CreatePlace(a.DB, w, r)
-}
-
-// GetEditPlacePage returns edit place page as response
-func (a *App) GetEditPlacePage(w http.ResponseWriter, r *http.Request) {
-	handler.GetEditPlacePage(a.DB, a.Config, w, r)
 }

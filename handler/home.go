@@ -1,8 +1,6 @@
 package handler
 
 import (
-	"github.com/jinzhu/gorm"
-	"github.com/sonereker/kubbe/config"
 	"github.com/sonereker/kubbe/model"
 	"html/template"
 	"net/http"
@@ -15,10 +13,10 @@ func init() {
 	tmpl = template.Must(template.ParseFiles("templates/layouts/base.html", "templates/home/index.html"))
 }
 
-func GetHomePage(db *gorm.DB, c *config.Config, w http.ResponseWriter, r *http.Request) {
+func (p *Page) Home(w http.ResponseWriter, r *http.Request) {
 	var places []model.Place
-	db.Preload("Contents").Table("places").Joins("left join contents on contents."+
+	p.DB.Preload("Contents").Table("places").Joins("left join contents on contents."+
 		"place_id = places.id").Where("contents.status = ?", model.Published).Find(&places)
 
-	tmpl.ExecuteTemplate(w, "base", PageData{c.App.Title, places})
+	tmpl.ExecuteTemplate(w, string(Base), PageData{p.Config.App.Title, places})
 }

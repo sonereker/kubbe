@@ -2,26 +2,28 @@ package config
 
 import "os"
 
-type Config struct {
-	DB  *DBConfig
-	App *AppConfig
-}
+type (
+	Config struct {
+		DB  *DBConfig
+		App *AppConfig
+	}
 
-type DBConfig struct {
-	Host     string
-	Port     string
-	Dialect  string
-	Username string
-	Password string
-	Name     string
-	SSLMode  string
-}
+	DBConfig struct {
+		Host     string
+		Port     string
+		Dialect  string
+		Username string
+		Password string
+		Name     string
+		SSLMode  string
+	}
 
-type AppConfig struct {
-	Title      string
-	Host       string
-	MapsAPIKey string
-}
+	AppConfig struct {
+		Title      string
+		Port       string
+		MapsAPIKey string
+	}
+)
 
 // GetConfig checks if env has the variables required, if not fallbacks to default values
 func GetConfig() *Config {
@@ -37,7 +39,7 @@ func GetConfig() *Config {
 		},
 		App: &AppConfig{
 			Title: getEnvOrDefault("KUBBE_APP_TITLE", "Kubbe"),
-			Host:  getEnvOrDefault("KUBBE_APP_HOST", "localhost:4000"),
+			Port:  getEnvOrDefault("KUBBE_APP_PORT", "8080"),
 		},
 	}
 }

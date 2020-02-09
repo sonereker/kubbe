@@ -4,14 +4,13 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/gosimple/slug"
 	"github.com/jinzhu/gorm"
-	"github.com/sonereker/kubbe/config"
 	"github.com/sonereker/kubbe/model"
 	"net/http"
 	"strconv"
 )
 
-// GetShowPlacePage renders place page with base layout
-func GetShowPlacePage(db *gorm.DB, c *config.Config, w http.ResponseWriter, r *http.Request) {
+// ShowPlace renders place page with base layout
+func (p *Page) ShowPlace(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id := vars["id"]
 
@@ -19,25 +18,25 @@ func GetShowPlacePage(db *gorm.DB, c *config.Config, w http.ResponseWriter, r *h
 	place := model.Place{}
 
 	if isInteger(id) {
-		query = db.Preload("Contents").First(&place, id)
+		query = p.DB.Preload("Contents").First(&place, id)
 	} else {
-		query = db.Preload("Contents").Table("places").Joins("left join contents on contents."+
+		query = p.DB.Preload("Contents").Table("places").Joins("left join contents on contents."+
 			"place_id = places.id").Where("contents.slug = ? and contents.status = ?", id, model.Published).First(&place)
 	}
 
 	if err := query.Error; err != nil {
-		RenderError(w, "base", http.StatusNotFound)
+		RenderError(w, Base, http.StatusNotFound)
 		return
 	}
 
-	RenderTemplate(w, "base", "places/show", PageData{c.App.Title, place})
+	RenderTemplate(w, Base, "places/show", PageData{p.Config.App.Title, place})
 }
 
-func GetNewPlacePage(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
-	RenderTemplate(w, "manager", "places/new", nil)
+func (p *Page) NewPlace(w http.ResponseWriter, r *http.Request) {
+	RenderTemplate(w, Management, "places/new", nil)
 }
 
-func CreatePlace(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
+func (p *Page) CreatePlace(w http.ResponseWriter, r *http.Request) {
 	_ = r.ParseForm()
 
 	content := model.Content{}
@@ -51,28 +50,28 @@ func CreatePlace(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 	place.Lat = r.Form.Get("lat")
 	place.Lon = r.Form.Get("lon")
 
-	db.Create(&place)
+	p.DB.Create(&place)
 
 	http.Redirect(w, r, "/", http.StatusMovedPermanently)
 }
 
-// GetEditPlacePage renders edit place page
-func GetEditPlacePage(db *gorm.DB, c *config.Config, w http.ResponseWriter, r *http.Request) {
+// EditPlace renders edit place page
+func (p *Page) EditPlace(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id := vars["id"]
 
 	var query *gorm.DB
 	place := model.Place{}
 
-	query = db.Preload("Contents").Table("places").Joins("left join contents on contents."+
+	query = p.DB.Preload("Contents").Table("places").Joins("left join contents on contents."+
 		"place_id = places.id").Where("contents.id = ? and contents.status = ?", id, model.Published).First(&place)
 
 	if err := query.Error; err != nil {
-		RenderError(w, "base", http.StatusNotFound)
+		RenderError(w, Base, http.StatusNotFound)
 		return
 	}
 
-	RenderTemplate(w, "base", "places/edit", PageData{c.App.Title, place})
+	RenderTemplate(w, Base, "places/edit", PageData{p.Config.App.Title, place})
 }
 
 func isInteger(s string) bool {

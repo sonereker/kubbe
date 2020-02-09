@@ -13,7 +13,7 @@ func TestGetConfig(t *testing.T) {
 	const dbPassword string = "dummy_pass"
 	const dbName string = "dummy_db"
 	const appTitle string = "Kubbe Test"
-	const appHost string = "localhost_test:1234"
+	const appPort string = ":1234"
 
 	_ = os.Setenv("KUBBE_DB_HOST", dbHost)
 	_ = os.Setenv("KUBBE_DB_PORT", dbPort)
@@ -21,7 +21,7 @@ func TestGetConfig(t *testing.T) {
 	_ = os.Setenv("KUBBE_DB_PASSWORD", dbPassword)
 	_ = os.Setenv("KUBBE_DB_NAME", dbName)
 	_ = os.Setenv("KUBBE_APP_TITLE", appTitle)
-	_ = os.Setenv("KUBBE_APP_HOST", appHost)
+	_ = os.Setenv("KUBBE_APP_PORT", appPort)
 
 	c := GetConfig()
 
@@ -32,5 +32,5 @@ func TestGetConfig(t *testing.T) {
 	assert.EqualValues(t, c.DB.Password, dbPassword)
 	assert.EqualValues(t, c.DB.Name, dbName)
 	assert.EqualValues(t, c.App.Title, appTitle)
-	assert.EqualValues(t, c.App.Host, appHost)
+	assert.EqualValues(t, c.App.Port, appPort)
 }
