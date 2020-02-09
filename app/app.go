@@ -42,7 +42,7 @@ func (a *App) Init(config *config.Config) {
 	a.Config = config
 	a.PageHandler = &handler.Page{
 		DB:     a.DB,
-		Config: a.Config,
+		Config: a.Config.App,
 	}
 
 	a.setRouters()

@@ -5,5 +5,5 @@ import (
 )
 
 func (p *Page) Login(w http.ResponseWriter, r *http.Request) {
-	RenderTemplate(w, Auth, "sessions/new", PageData{p.Config.App.Title, nil})
+	RenderTemplate(w, Auth, "sessions/new", PageData{p.Config.Title, nil})
 }

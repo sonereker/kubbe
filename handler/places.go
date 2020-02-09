@@ -29,7 +29,7 @@ func (p *Page) ShowPlace(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	RenderTemplate(w, Base, "places/show", PageData{p.Config.App.Title, place})
+	RenderTemplate(w, Base, "places/show", PageData{p.Config.Title, place})
 }
 
 func (p *Page) NewPlace(w http.ResponseWriter, r *http.Request) {
@@ -71,7 +71,7 @@ func (p *Page) EditPlace(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	RenderTemplate(w, Base, "places/edit", PageData{p.Config.App.Title, place})
+	RenderTemplate(w, Base, "places/edit", PageData{p.Config.Title, place})
 }
 
 func isInteger(s string) bool {

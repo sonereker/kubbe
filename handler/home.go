@@ -18,5 +18,5 @@ func (p *Page) Home(w http.ResponseWriter, r *http.Request) {
 	p.DB.Preload("Contents").Table("places").Joins("left join contents on contents."+
 		"place_id = places.id").Where("contents.status = ?", model.Published).Find(&places)
 
-	tmpl.ExecuteTemplate(w, string(Base), PageData{p.Config.App.Title, places})
+	tmpl.ExecuteTemplate(w, string(Base), PageData{p.Config.Title, places})
 }

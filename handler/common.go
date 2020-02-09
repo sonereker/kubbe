@@ -17,7 +17,7 @@ const (
 type (
 	Page struct {
 		DB     *gorm.DB
-		Config *config.Config
+		Config *config.AppConfig
 	}
 
 	PageData struct {
