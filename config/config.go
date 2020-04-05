@@ -32,14 +32,14 @@ func GetConfig() *Config {
 			Host:     getEnvOrDefault("KUBBE_DB_HOST", "localhost"),
 			Port:     getEnvOrDefault("KUBBE_DB_PORT", "5432"),
 			Username: getEnvOrDefault("KUBBE_DB_USERNAME", "postgres"),
-			Password: getEnvOrDefault("KUBBE_DB_PASSWORD", ""),
+			Password: getEnvOrDefault("KUBBE_DB_PASSWORD", "kubbe"),
 			Name:     getEnvOrDefault("KUBBE_DB_NAME", "kubbe_dev"),
 			Dialect:  "postgres",
 			SSLMode:  "disable",
 		},
 		App: &AppConfig{
 			Title: getEnvOrDefault("KUBBE_APP_TITLE", "Kubbe"),
-			Port:  getEnvOrDefault("KUBBE_APP_PORT", "8080"),
+			Port:  getEnvOrDefault("KUBBE_APP_PORT", "3000"),
 		},
 	}
 }

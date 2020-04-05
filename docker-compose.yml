@@ -1,0 +1,40 @@
+version: "3.7"
+services:
+  app:
+    container_name: kubbe_app
+    build:
+      context: .
+    ports:
+      - 3000:3000
+    env_file:
+      - .env
+    restart: on-failure
+    depends_on:
+      - database_postgres
+    networks:
+      - fullstack
+    volumes:
+      - app:/dist
+
+  database_postgres:
+    container_name: kubbe_postgres
+    image: postgres:9.4
+    environment:
+      - POSTGRES_USER=${KUBBE_DB_USERNAME}
+      - POSTGRES_PASSWORD=${KUBBE_DB_PASSWORD}
+      - POSTGRES_DB=${KUBBE_DB_NAME}
+      - DATABASE_HOST=${KUBBE_DB_HOST}
+    ports:
+      - 5432:5432
+    networks:
+      - fullstack
+    volumes:
+      - database_postgres:/var/lib/postgresql/data
+
+volumes:
+  app:
+  database_postgres:
+
+networks:
+  fullstack:
+    driver: bridge
